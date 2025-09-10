@@ -17,6 +17,24 @@ B. Buatlah bagan yang berisi request client ke web aplikasi berbasis Django bese
 
 ![Django Request-Response Flow](images/django_request_response_flow.png)
 
+1. Client Browser
+Mengirim request ke server (contoh: http://localhost:8000/main/).
+
+2. urls.py
+Menerima request dari client, Mencocokkan pola URL dengan fungsi di views.py.
+
+3. views.py
+Berisi logika aplikasi, Bisa memanggil models.py jika butuh data dari database, Menyiapkan context data untuk dikirim ke template.
+
+4. models.py
+Merepresentasikan tabel database dalam bentuk class Python,Mengelola CRUD (Create, Read, Update, Delete) data.
+
+5. Template HTML
+Menerima context dari view, Menghasilkan tampilan yang akan dikirim kembali ke client
+
+6. Response ke Client
+Browser menerima file HTML hasil render untuk ditampilkan ke pengguna.
+
 C. Jelaskan peran settings.py dalam proyek Django!!
 
 settings.py adalah pusat konfigurasi pada proyek Django. Semua pengaturan inti yang dibutuhkan aplikasi ada di sini, meliputi:
