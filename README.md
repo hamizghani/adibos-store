@@ -15,14 +15,8 @@ Step-by-Step Pengerjaan Checklist
 
 B. Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html.
 
-flowchart TD
-    A[Client Browser] -->|HTTP Request| B[urls.py]
-    B -->|Pemetaan URL| C[views.py]
-    C -->|Opsional: Query Data| D[models.py]
-    D -->|Data dari Database| C
-    C -->|Render Context| E[Template HTML]
-    E -->|Response (HTML)| A
-    
+![Django Request-Response Flow](images/django_request_response_flow.png)
+
 C. Jelaskan peran settings.py dalam proyek Django!!
 
 settings.py adalah pusat konfigurasi pada proyek Django. Semua pengaturan inti yang dibutuhkan aplikasi ada di sini, meliputi:
