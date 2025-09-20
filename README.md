@@ -122,4 +122,79 @@ Hasil Request Postman
 # http://localhost:8000/xml/1/
 ![XML Id 1](images/xml_id_1.jpg)
 
+**TUGAS 4**
 
+*Apa itu Django AuthenticationForm? Jelaskan juga kelebihan dan kekurangannya.*
+
+AuthenticationForm adalah form bawaan Django (di modul django.contrib.auth.forms) yang digunakan untuk memvalidasi kredensial login (biasanya username dan password). Secara internal form ini memanggil fungsi authenticate() untuk memeriksa kredensial dan menyediakan method get_user() untuk mengambil instance user yang berhasil diautentikasi.
+
+Kelebihan
+1. Terintegrasi langsung dengan mekanisme autentikasi Django (authenticate(), session backend).
+2. Menyediakan handling error dan validasi standar (contoh: user tidak aktif, kredensial salah).
+3. Mudah dipakai bersama view login built-in atau custom view.
+4. Mengurangi boilerplate (tidak perlu menulis validasi credential manual).
+
+Kekurangan
+1. Hanya menangani pola login standar (username + password). Jika ingin login dengan email atau field lain, perlu extend atau buat custom form/backend.
+2. Tidak mengurus otorisasi atau permission — hanya autentikasi.
+3. Pesan error/aturan validasi generik; untuk tampilan/masukan spesifik sering perlu customisasi.
+
+*Apa perbedaan antara autentikasi dan otorisasi? Bagaiamana Django mengimplementasikan kedua konsep tersebut?*
+
+Autentikasi (Authentication)
+Definisi: proses memverifikasi identitas pengguna (siapa dia). Biasanya menggunakan username/password, token, atau metode lain (OAuth, SSO). 
+Di Django: authenticate() memeriksa kredensial, login() menyimpan status login ke session. Backends autentikasi (class di AUTHENTICATION_BACKENDS) bertanggung jawab untuk logika verifikasi.
+
+Otorisasi (Authorization)
+Definisi: proses menentukan apakah pengguna berhak melakukan aksi tertentu (apa yang boleh dilakukan). Contoh: mengakses halaman admin, mengubah objek A, dll.
+Di Django: model permission (per-model permissions), method user.has_perm('app.action_model'), user.is_staff / user.is_superuser, dan group. Django menyediakan decorator/mixins (@permission_required, LoginRequiredMixin, PermissionRequiredMixin) untuk memudahkan pengecekan permission.
+
+*Apa saja kelebihan dan kekurangan session dan cookies dalam konteks menyimpan state di aplikasi web?*
+
+Cookie (client-side)
+
+Kelebihan:
+1. Persisten (bisa memiliki masa hidup sendiri → cocok untuk remember-me atau preferensi).
+2. Tidak memerlukan penyimpanan server (bebas skalabilitas server).
+
+Kekurangan:
+
+1. Ukuran terbatas (sekitar 4 KB).
+2. Rentan terhadap XSS (jika JS dapat membaca cookie) dan pencurian cookie.
+3. Data di sisi klien mudah dimanipulasi jika tidak ditandatangani/di-encrypt.
+4. Perlu perhatian keamanan (HttpOnly, Secure, SameSite).
+
+Session (server-side, dengan ID dikirim lewat cookie)
+
+Kelebihan:
+1. Lebih aman untuk data sensitif karena tidak disimpan di client (hanya id).
+2. Dapat menyimpan data lebih besar.
+3. Server bisa invalidasi session (logout global, forced logout).
+
+Kekurangan:
+1. Membutuhkan sumber daya server (penyimpanan session).
+2. Perlu strategi scaling (shared cache/DB) jika aplikasi berjalan multi-instance.
+3. Jika session id dicuri, attacker mendapat akses—maka perlunya mitigasi (rotasi session, cookie flags).
+
+*Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai? Bagaimana Django menangani hal tersebut?*
+
+Tidak otomatis aman — ada beberapa risiko: XSS (script membaca cookie), CSRF (site yang dipercaya mengirim request atas nama user), cookie theft over plain HTTP.
+
+1. SESSION_COOKIE_HTTPONLY = True (default — mencegah akses cookie via JS).
+2. SESSION_COOKIE_SECURE = True (pastikan HTTPS di produksi; mencegah cookie dikirim lewat HTTP).
+3. SESSION_COOKIE_SAMESITE = 'Lax' atau 'Strict' (membatasi cookie ter-send pada cross-site requests; 'Lax' umumnya seimbang untuk UX).
+4. CSRF protection: middleware CsrfViewMiddleware + CSRF token (csrf_token di template) membantu mencegah CSRF.
+5. Saat login() Django melakukan rotasi session key (mengurangi risiko session fixation).
+
+*Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).*
+1. Mengkoneksikan class product ke user dengan "owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)" kemudian melakukan migrasi dan update pada add_product
+2. Membuat template untuk login, register dan logout
+3. Menampilkan logged in user dan set cookie untuk last login 
+4. Membuat dummy data pada localhost untuk 2 akun
+
+
+<!-- dummy data
+userganteng
+g4ntengbanget
+usercantik
+c4ntikbanget -->

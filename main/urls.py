@@ -1,6 +1,5 @@
 from django.urls import path
 from main.views import *
-
 app_name = 'main'
 
 urlpatterns = [
@@ -12,6 +11,10 @@ urlpatterns = [
     path('products/', show_products, name='show_products'),
     path('products/<int:id>/', show_product_detail, name='show_product_detail'),
     path('products/add/', add_product, name='add_product'),
+    path('register/', register, name='register'),
+    path('login/', login_user, name='login'),
+    path('logout/', logout_user, name='logout'),
+    
 ]
 # http://localhost:8000/xml
 # http://localhost:8000/json
