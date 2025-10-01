@@ -41,7 +41,7 @@ def show_main(request):
 
 @login_required(login_url='/login')
 def show_products(request):
-    products = Product.objects.all()
+    products = Product.objects.filter(owner=request.user)
     context = {
         "products": products,
     }
@@ -55,22 +55,42 @@ def show_product_detail(request, id):
     }
     return render(request, "product_detail.html", context)
 
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from .forms import ProductForm
-
 @login_required(login_url='/login')
 def add_product(request):
     if request.method == "POST":
         form = ProductForm(request.POST)
         if form.is_valid():
-            product = form.save(commit=False)   # jangan langsung simpan
-            product.owner = request.user        # set owner = user login
+            product = form.save(commit=False)
+            product.owner = request.user
             product.save()
+            messages.success(request, 'Produk berhasil ditambahkan!')
             return redirect("main:show_products")
     else:
         form = ProductForm()
     return render(request, "product_form.html", {"form": form})
+
+@login_required(login_url='/login')
+def edit_product(request, id):
+    product = get_object_or_404(Product, pk=id, owner=request.user)
+    
+    if request.method == "POST":
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Produk berhasil diupdate!')
+            return redirect('main:show_products')
+    else:
+        form = ProductForm(instance=product)
+    
+    context = {'form': form, 'product': product}
+    return render(request, "edit_product.html", context)
+
+@login_required(login_url='/login')
+def delete_product(request, id):
+    product = get_object_or_404(Product, pk=id, owner=request.user)
+    product.delete()
+    messages.success(request, 'Produk berhasil dihapus!')
+    return redirect('main:show_products')
 
 def register(request):
     form = UserCreationForm()
@@ -102,4 +122,6 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('main:login')
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response

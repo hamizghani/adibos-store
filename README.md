@@ -184,7 +184,7 @@ Tidak otomatis aman — ada beberapa risiko: XSS (script membaca cookie), CSRF (
 2. SESSION_COOKIE_SECURE = True (pastikan HTTPS di produksi; mencegah cookie dikirim lewat HTTP).
 3. SESSION_COOKIE_SAMESITE = 'Lax' atau 'Strict' (membatasi cookie ter-send pada cross-site requests; 'Lax' umumnya seimbang untuk UX).
 4. CSRF protection: middleware CsrfViewMiddleware + CSRF token (csrf_token di template) membantu mencegah CSRF.
-5. Saat login() Django melakukan rotasi session key (mengurangi risiko session fixation).
+5. Saat login() Django melakukan rotasi session key (mengurangi risiko session fixation).   
 
 *Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).*
 1. Mengkoneksikan class product ke user dengan "owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)" kemudian melakukan migrasi dan update pada add_product
@@ -198,3 +198,78 @@ userganteng
 g4ntengbanget
 usercantik
 c4ntikbanget -->
+
+**TUGAS 5**
+*Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!*
+
+1. Declarations dengan !important (penulis/author important > normal rules — catatan: ada perbedaan teori antara user/author important, tapi untuk kebanyakan proyek: !important di CSS menimpa aturan biasa).
+2. Inline styles (style="...") — sangat spesifik.
+3. ID selectors (#id).
+4. Class, attribute, dan pseudo-class selectors (.class, [attr], :hover).
+5. Element/type dan pseudo-element selectors (div, h1, ::before).
+6. Universal selector (*) dan inherited values.
+
+*Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design, serta jelaskan mengapa!*
+
+Alasan kenapa penting:
+1. Keragaman perangkat: pengguna mengakses web dari ponsel, tablet, laptop, televisi—tampilan harus adaptif.
+2. Pengalaman pengguna (UX): tata letak yang menyesuaikan meningkatkan kenyamanan, retensi, dan konversi.
+3. Aksesibilitas & inklusivitas: responsive sering berbarengan dengan praktik aksesibilitas (teks lebih besar, tombol lebih mudah disentuh).
+4. SEO & performa: mesin pencari memprioritaskan situs mobile-friendly; desain responsif mempermudah optimasi performa.
+5. Maintainability & biaya: satu basis kode untuk banyak perangkat mengurangi biaya pengembangan dan bug.
+
+Contoh aplikasi yang sudah menerapkan responsive design:
+Airbnb, Twitter, Medium, Gmail, Google Search — umumnya mendesain mobile-first dan menyesuaikan layout untuk berbagai layar.
+
+Contoh aplikasi yang belum/tidak menerapkan responsive design (tipe contoh):
+Portal internal (ERP/HR lama): banyak aplikasi enterprise on‑premise dirancang untuk layar desktop besar; form dan tabel padat sulit dipakai di ponsel, Situs pemerintahan lama / microsites statis yang belum diupdate—sering masih desktop-only.
+
+
+*Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!*
+
+content: area isi (teks/gambar).
+padding: ruang di dalam elemen, antara content dan border.
+border: garis di sekitar padding + content.
+margin: ruang di luar border, memisahkan elemen dengan elemen lain.
+
+contoh implementasi:
+.card {
+    width: 300px; /* lebar konten dasar */
+    padding: 16px; /* ruang di dalam */
+    border: 2px solid #222; /* garis pembatas */
+    margin: 24px auto; /* jarak ke elemen lain */
+    background: #fff;
+}
+
+*Jelaskan konsep flex box dan grid layout beserta kegunaannya!*
+ 
+Flexbox (Flexible Box)
+
+1. Tujuan: layout satu dimensi — baris atau kolom.
+2. Container properties (contoh): display: flex; flex-direction; justify-content; align-items; gap; flex-wrap.
+3. Item properties (contoh): flex: <grow> <shrink> <basis>; order; align-self.
+
+Kapan pakai Flexbox:
+    Untuk komponennya 1D: navbar, toolbar, list item yang harus rata tengah, card dengan elemen kiri/kanan.
+
+Grid Layout
+
+1. Tujuan: layout dua dimensi — baris dan kolom.
+2. Container properties (contoh): display: grid; grid-template-columns; grid-template-rows; grid-template-areas; gap; align-content.
+3. Power: mengatur area kompleks (dashboard, landing page dengan multiple columns, masonry sederhana) lebih mudah dan eksplisit.
+
+Kapan pakai Grid:
+    Skeleton halaman, layout dashboard, galeri gambar 2D, area dengan alignment di kedua sumbu.
+
+*Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!*
+
+1. Melakukan update pada views.py untuk menambahkan fungsi edit dan delete
+2. Update urls.py - menambahkan routing untuk edit dan delete
+3. Melakukan modifikasi pada base.html
+4. Membuat file responsive navbar
+5. Melakukan edit pada html lainnya
+6. Membuat README.md
+7. Jangan lupa commit!
+
+
+
