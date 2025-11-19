@@ -11,9 +11,64 @@ from django.views.decorators.http import require_POST
 import datetime
 from .forms import StudentForm
 import json
+import requests
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.html import strip_tags
+import json
+from django.http import JsonResponse
+
+
 
 from .forms import ProductForm
 from .models import Product, Student
+
+
+@csrf_exempt
+def create_product_flutter(request):
+    """Endpoint for Flutter (or other clients) to create a product via JSON POST.
+
+    Expected JSON body:
+    {
+      "title": "Product name",
+      "content": "Product description",
+      "category": "Category",
+      "thumbnail": "https://...",
+      "is_featured": false
+    }
+    """
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except Exception:
+            return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
+
+        name = strip_tags(data.get("title", ""))
+        description = strip_tags(data.get("content", ""))
+        category = data.get("category", "")
+        thumbnail = data.get("thumbnail", "")
+        is_featured = data.get("is_featured", False)
+
+        # owner may be anonymous; set to request.user if authenticated
+        owner = request.user if request.user.is_authenticated else None
+
+        # basic validation
+        if not name or not description:
+            return JsonResponse({"status": "error", "message": "Missing required fields"}, status=400)
+
+        new_product = Product(
+            owner=owner,
+            name=name,
+            price=0,
+            description=description,
+            thumbnail=thumbnail,
+            category=category,
+            is_featured=is_featured,
+        )
+        new_product.save()
+
+        return JsonResponse({"status": "success", "id": new_product.id}, status=200)
+    else:
+        return JsonResponse({"status": "error", "message": "Only POST allowed"}, status=405)
 
 # Login View dengan AJAX
 def login(request):
@@ -373,3 +428,21 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
+
+def proxy_image(request):
+    image_url = request.GET.get('url')
+    if not image_url:
+        return HttpResponse('No URL provided', status=400)
+    
+    try:
+        # Fetch image from external source
+        response = requests.get(image_url, timeout=10)
+        response.raise_for_status()
+        
+        # Return the image with proper content type
+        return HttpResponse(
+            response.content,
+            content_type=response.headers.get('Content-Type', 'image/jpeg')
+        )
+    except requests.RequestException as e:
+        return HttpResponse(f'Error fetching image: {str(e)}', status=500)
