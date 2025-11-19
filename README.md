@@ -271,5 +271,42 @@ Kapan pakai Grid:
 6. Membuat README.md
 7. Jangan lupa commit!
 
+**TUGAS 6**
 
+*Apa perbedaan antara synchronous request dan asynchronous request?*
 
+Synchronous request berarti setiap permintaan dikirim ke server dan menunggu respons sebelum melanjutkan eksekusi proses berikutnya. Hal ini menyebabkan blocking behavior, di mana pengguna tidak bisa melakukan interaksi lain sampai proses selesai.
+
+Asynchronous request, sebaliknya, memungkinkan browser untuk mengirim permintaan ke server di latar belakang tanpa harus me-reload seluruh halaman. Proses lain di sisi klien tetap berjalan, sehingga lebih cepat dan responsif.
+
+*Bagaimana AJAX bekerja di Django (alur request–response)?*
+
+1. User action: Pengguna melakukan aksi di browser (misal klik tombol “Load Data”).
+2. AJAX request: JavaScript (biasanya menggunakan fetch() atau XMLHttpRequest) mengirim HTTP request ke URL Django tertentu (biasanya view yang ditandai dengan @csrf_exempt atau AJAX-safe).
+3. View processing: Django menerima request tersebut, memproses data (misal query database), dan mengembalikan JSON response.
+4. Client update: JavaScript menangani respons tersebut dan memperbarui DOM secara dinamis tanpa memuat ulang halaman.
+
+*Apa keuntungan menggunakan AJAX dibandingkan render biasa di Django?*
+
+1. Responsif: Tidak perlu reload seluruh halaman.
+2. Efisien: Hanya data yang berubah yang dikirim.
+3. Lebih interaktif: Dapat memuat konten dinamis (misalnya infinite scroll, live search).
+4. Pengalaman pengguna meningkat: Waktu tunggu lebih singkat dan tampilan lebih halus.
+
+*Bagaimana cara memastikan keamanan saat menggunakan AJAX untuk fitur Login dan Register di Django?*
+
+1. Gunakan CSRF Token
+Django memiliki mekanisme csrf_token untuk memastikan request berasal dari sumber yang sah. Pastikan token ini dikirim bersama request AJAX (biasanya di header).
+2. Validasi Input di Server-side
+Jangan hanya bergantung pada validasi JavaScript. Semua input harus tetap divalidasi di Django view.
+3. Gunakan HTTPS
+Untuk melindungi data sensitif (terutama password) dari sniffing.
+4. Batasi Respons
+Jangan mengirimkan data sensitif dalam JSON response (misalnya password hash atau session ID).
+
+*Bagaimana AJAX mempengaruhi pengalaman pengguna (User Experience) pada website?*
+
+1. Lebih cepat dan seamless: Pengguna tidak perlu menunggu halaman reload penuh.
+2. Interaksi real-time: Data dapat diperbarui secara langsung (misalnya live chat, notifikasi).
+3. Konsistensi visual: Transisi antar aksi terasa lebih alami.
+4. Catatan: Pengembang tetap perlu menangani error (misal koneksi gagal) agar UX tidak terganggu.

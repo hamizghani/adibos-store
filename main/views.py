@@ -9,10 +9,11 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import datetime
+from .forms import StudentForm
 import json
 
 from .forms import ProductForm
-from .models import Product
+from .models import Product, Student
 
 # Login View dengan AJAX
 def login(request):
@@ -45,6 +46,20 @@ def login(request):
         form = AuthenticationForm()
     
     return render(request, 'login.html', {'form': form})
+
+# def create_student(request):
+#     student = Student.objects.create('Ghani', 2024, 'mahasiswa 2024')
+#     return render('show_student.html', {'student' : student})
+
+def add_student(request):
+    if request.method == "POST":
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("main:show_student")
+    else:
+        form = StudentForm()
+    return render(request, "student_form.html", {"bambang": form})
 
 # Register View dengan AJAX
 def register(request):

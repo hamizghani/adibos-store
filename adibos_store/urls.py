@@ -20,4 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
+    # authentication endpoints for mobile/web
+    path('auth/', include('authentication.urls')),
 ]
